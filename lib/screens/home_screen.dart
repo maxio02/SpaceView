@@ -13,7 +13,6 @@ class HomeScreen extends StatelessWidget {
         child: Column(
           children: [
          SvgPicture.asset(
-          //TODO Fix the svg size, its not centering correctly probably because of how it was exported
           'assets/logo_no_bg.svg',
           width: 400
         ),
