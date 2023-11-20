@@ -8,6 +8,10 @@ class SpaceViewBottomNavBar extends StatelessWidget {
   Figure out how to send the user to diffrent screens
     Possible solutins:
     -property Called onTap that can get a reference to a function
+    -https://codewithandrea.com/articles/multiple-navigators-bottom-navigation-bar/
+    -better solution: use package called Cupertino, also has some nice IOS widgets
+    -cupertino is used for IOS devices and Material Design(what we use now) mainly for android
+    -after a while I now think we should switch to cupertino entirely
   Maybe try to use SF Symbols as they are already imported to the project, would have problems
   with the EULA of how they can be used
 
@@ -45,6 +49,9 @@ Widget build(BuildContext context) {
           unselectedItemColor: Colors.grey,
           backgroundColor: Colors.black,
           showUnselectedLabels: true,
+          onTap: (index){
+
+          },
         ),
     );
 }
