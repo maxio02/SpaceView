@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:space_view/theme/theme_constants.dart';
-
-
-class SpaceViewBottomNavBar extends StatelessWidget {
-  final int selectedIndex;
+import 'package:flutter/services.dart';
+class SpaceViewBottomNavBar extends StatefulWidget {
+  final int initialSelectedIndex;
   /*TODO 
   Figure out how to send the user to diffrent screens
     Possible solutins:
@@ -17,44 +16,51 @@ class SpaceViewBottomNavBar extends StatelessWidget {
 
   Proper Colors From the theme constants file
   */
-  SpaceViewBottomNavBar({
-    required this.selectedIndex
-  });
+  
+  SpaceViewBottomNavBar({required this.initialSelectedIndex});
 
-@override
-Widget build(BuildContext context) {
-  return SizedBox(height: 60, 
+  @override
+  State<SpaceViewBottomNavBar> createState() => _SpaceViewBottomNavBarState();
+}
+
+class _SpaceViewBottomNavBarState extends State<SpaceViewBottomNavBar> {
+  late int selectedIndex = widget.initialSelectedIndex;
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 60,
       child: BottomNavigationBar(
-          type: BottomNavigationBarType.fixed,
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: Icon(Icons.photo_library),
-              label: 'Gallery',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.photo),
-              label: 'Picture',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: 'Home',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.map),
-              label: 'Map',
-            ),
-          ],
-          currentIndex: selectedIndex,
-          selectedItemColor: accentColor,
-          unselectedItemColor: Colors.grey,
-          backgroundColor: Colors.black,
-          showUnselectedLabels: true,
-          onTap: (index){
-
-          },
-        ),
+        currentIndex: selectedIndex,
+        onTap: (index) {
+          setState(() {
+            selectedIndex = index;
+            HapticFeedback.lightImpact();
+          });
+        },
+        type: BottomNavigationBarType.fixed,
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.photo_library),
+            label: 'Gallery',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.photo),
+            label: 'Picture',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.map),
+            label: 'Map',
+          ),
+        ],
+        selectedItemColor: accentColor,
+        unselectedItemColor: Colors.grey,
+        backgroundColor: Colors.black,
+        showUnselectedLabels: true,
+      ),
     );
+  }
 }
-}
-
-
