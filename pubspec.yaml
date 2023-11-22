@@ -92,4 +92,6 @@ flutter:
   # see https://flutter.dev/custom-fonts/#from-packages
 
   assets:
-    - assets/logo_no_bg.svg
+    - assets/logo_no_bg_light.svg
+    - assets/pic4.jpg
+    - assets/logo_no_bg_dark_with_text.svg
