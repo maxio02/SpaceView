@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:space_view/widgets/themeSwitch.dart';
+import 'package:space_view/widgets/homePageCarousel.dart';
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
@@ -18,7 +19,8 @@ class HomeScreen extends StatelessWidget {
           'assets/vectors/logo_no_bg_light.svg',
           width: 300
         ),
-        SizedBox(height: 200),
+        // SizedBox(height: 200),
+        HomePageCarousel(),
         ThemeSwitch()
         ],)
       ),
