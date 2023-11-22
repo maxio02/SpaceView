@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:space_view/theme/theme_constants.dart';
+import 'package:space_view/theme/themeConstants.dart';
 import 'package:flutter/services.dart';
 class SpaceViewBottomNavBar extends StatefulWidget {
   final int initialSelectedIndex;
@@ -56,7 +56,7 @@ class _SpaceViewBottomNavBarState extends State<SpaceViewBottomNavBar> {
             label: 'Map',
           ),
         ],
-        selectedItemColor: accentColor,
+        // selectedItemColor: accentColor,
         unselectedItemColor: Colors.grey,
         backgroundColor: Colors.black,
         showUnselectedLabels: true,

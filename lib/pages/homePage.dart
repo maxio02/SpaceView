@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:space_view/widgets/themeSwitch.dart';
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
@@ -10,14 +11,15 @@ class HomeScreen extends StatelessWidget {
       child: Center(
         child: Column(
           children: [
+            SizedBox(
+              height: 59
+              ),
          SvgPicture.asset(
-          'assets/logo_no_bg_light.svg',
-          width: 400
+          'assets/vectors/logo_no_bg_light.svg',
+          width: 300
         ),
-        CupertinoSwitch(value: true, onChanged: (bool value) {
-
-        }
-        )
+        SizedBox(height: 200),
+        ThemeSwitch()
         ],)
       ),
 

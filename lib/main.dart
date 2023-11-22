@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:space_view/pages/mainscreen.dart';
-
+import 'package:space_view/theme/themeProvider.dart';
+import 'package:provider/provider.dart';
+import 'package:space_view/theme/themeConstants.dart';
 void main() {
   runApp(const MyApp());
 }
@@ -10,10 +12,18 @@ class MyApp extends StatelessWidget {
 
   // This widget is the root of your application.
   @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
+  Widget build(BuildContext context) => ChangeNotifierProvider(
+    create: (context) => ThemeProvider(),
+    builder:(context, _){
+    final themeProvider = Provider.of<ThemeProvider>(context);
+
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Mainscreen(),
+      themeMode: themeProvider.themeMode,
+      theme: lightTheme,
+      darkTheme: darkTheme,
     );
-  }
+  },
+  );
 }
