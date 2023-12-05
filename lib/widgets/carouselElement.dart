@@ -18,7 +18,7 @@ class CarouselElement extends StatelessWidget {
           color: Theme.of(context).primaryColor,
           borderRadius: BorderRadius.circular(26),
         ),
-        child: Column(
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
                 height: 211,
@@ -28,8 +28,10 @@ class CarouselElement extends StatelessWidget {
             Text(
               title,
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+              textAlign: TextAlign.left,
             )
           ],
-        ));
+        )
+      );
   }
 }

@@ -1,33 +1,35 @@
 import 'package:flutter/material.dart';
 import '../pages/fullscreenArticlePage.dart';
-import 'carouselElement.dart';
+import 'galleryElement.dart';
 
-class HomePageCarousel extends StatefulWidget {
-  HomePageCarousel({Key? key}) : super(key: key);
+class VerticalGallery extends StatefulWidget {
+  VerticalGallery({Key? key}) : super(key: key);
 
   @override
-  State<HomePageCarousel> createState() => _HomePageCarouselState();
+  State<VerticalGallery> createState() => _VerticalGalleryState();
 }
 
-class _HomePageCarouselState extends State<HomePageCarousel> {
+class _VerticalGalleryState extends State<VerticalGallery> {
   List<AssetImage> images = [AssetImage("./assets/images/loading_dummy.jpg")];
-  List<String> titles = ["Loading"];
+  List<String> titles = [" "];
   List<String> descriptions = [" "];
+
   @override
   void initState() {
     super.initState();
-    genHomePageCarousel();
+    genVerticalGallery();
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 300,
-      child: ListView.builder(
-        itemCount: images.length,
-        scrollDirection: Axis.horizontal,
-        prototypeItem: CarouselElement(image: images.first, title: titles.first),
-itemBuilder: (context, index) {
+Widget build(BuildContext context) {
+  var screenSize = MediaQuery.of(context).size;
+  return Container(
+    height: screenSize.height,
+    child: ListView.builder(
+      itemCount: images.length,
+      scrollDirection: Axis.vertical,
+      prototypeItem: GalleryElement(image: images.first, title: titles.first, description: descriptions.first),
+      itemBuilder: (context, index) {
         return GestureDetector(
           onTap: () {
             Navigator.push(
@@ -39,14 +41,14 @@ itemBuilder: (context, index) {
               )),
             );
           },
-          child: CarouselElement(image: images[index], title: titles[index]),
+          child: GalleryElement(image: images[index], title: titles[index], description: descriptions[index]),
         );
       },
     ),
-    );
-  }
+  );
+}
 
-  Future<void> genHomePageCarousel() async {
+  Future<void> genVerticalGallery() async {
     await Future.delayed(Duration(seconds: 3));
     if (!mounted) return;
 
