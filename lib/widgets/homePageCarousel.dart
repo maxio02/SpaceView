@@ -47,7 +47,7 @@ itemBuilder: (context, index) {
   }
 
   Future<void> genHomePageCarousel() async {
-    await Future.delayed(Duration(seconds: 3));
+    await Future.delayed(Duration(seconds: 1));
     if (!mounted) return;
 
     List<AssetImage> newImages = List.empty(growable: true);

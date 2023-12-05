@@ -4,11 +4,14 @@ import 'package:flutter_svg/svg.dart';
 import 'package:space_view/widgets/homePageCarousel.dart';
 import 'package:space_view/widgets/settingsDrawer.dart';
 
-import '../widgets/themeSwitch.dart';
-
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
   void _showSettingsPane(BuildContext context) {
     showAlignedDialog(
       context: context,
@@ -37,13 +40,12 @@ class HomeScreen extends StatelessWidget {
         child: Center(
           child: Column(
             children: [
-              SizedBox(height: 59),
+              SizedBox(height: 80),
               SvgPicture.asset(
                 'assets/vectors/logo_no_bg_light.svg',
                 width: 300,
               ),
               HomePageCarousel(),
-              ThemeSwitch()
             ],
           ),
         ),

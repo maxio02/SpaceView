@@ -1,17 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:space_view/widgets/themeSwitch.dart';
 
 class SettingsDrawer extends StatelessWidget {
   const SettingsDrawer({Key? key}) : super(key: key);
 
   @override
-Widget build(BuildContext context) {
-    return Container(
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 200,
+      height: 200,
+      child: Scaffold(
+        backgroundColor: Color.fromRGBO(0, 0, 0, 0),
+        body: Container(
           width: 200,
           height: 200,
+          padding: EdgeInsets.all(20),
           decoration: BoxDecoration(
-            color: Theme.of(context).primaryColor,
+            color: Theme.of(context).primaryColor.withAlpha(200),
             borderRadius: BorderRadius.circular(26),
             boxShadow: [
               BoxShadow(
@@ -22,10 +27,40 @@ Widget build(BuildContext context) {
             ],
           ),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              //ThemeSwitch()
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Dark Mode",
+                    style: TextStyle(fontSize: 20),
+                  ),
+                  ThemeSwitch()
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Sound",
+                    style: TextStyle(fontSize: 20),
+                  ),
+                  Switch.adaptive(value: false, onChanged: (bool newValue) {})
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("About",
+                  style: TextStyle(fontSize: 20)),
+                  Icon(Icons.info_outline_rounded),
+                ],
+              )
             ],
           ),
-        );
-}
+        ),
+      ),
+    );
+  }
 }

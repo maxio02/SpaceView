@@ -3,7 +3,6 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../theme/themeConstants.dart';
 import 'galleryPage.dart';
 import 'homePage.dart';
 import 'mapPage.dart';
