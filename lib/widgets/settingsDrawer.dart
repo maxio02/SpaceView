@@ -7,13 +7,13 @@ class SettingsDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 200,
-      height: 200,
+      width: 210,
+      height: 210,
       child: Scaffold(
         backgroundColor: Color.fromRGBO(0, 0, 0, 0),
         body: Container(
-          width: 200,
-          height: 200,
+          width: 210,
+          height: 210,
           padding: EdgeInsets.all(20),
           decoration: BoxDecoration(
             color: Theme.of(context).primaryColor.withAlpha(200),
@@ -52,8 +52,7 @@ class SettingsDrawer extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("About",
-                  style: TextStyle(fontSize: 20)),
+                  Text("About", style: TextStyle(fontSize: 20)),
                   Icon(Icons.info_outline_rounded),
                 ],
               )
