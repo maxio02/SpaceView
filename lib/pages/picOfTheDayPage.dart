@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:photo_view/photo_view.dart';
+import 'package:photo_view/photo_view_gallery.dart';
 
 class PicOfTheDayScreen extends StatelessWidget {
   const PicOfTheDayScreen({Key? key}) : super(key: key);
@@ -21,13 +23,26 @@ class PicOfTheDayScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    width: screenSize.width,
-                    height: screenSize.width,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        fit: BoxFit.cover,
-                        image: AssetImage('assets/images/pic1.jpg'),
+                  Hero(
+                    tag: 'picOfTheDayImage',
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => FullScreenImage(),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        width: screenSize.width,
+                        height: screenSize.width,
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            fit: BoxFit.cover,
+                            image: AssetImage('assets/images/pic1.jpg'),
+                          ),
+                        ),
                       ),
                     ),
                   ),
@@ -69,6 +84,34 @@ class PicOfTheDayScreen extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class FullScreenImage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Hero(
+          tag: 'picOfTheDayImage',
+          child: PhotoViewGallery.builder(
+            itemCount: 1,
+            builder: (context, index) {
+              return PhotoViewGalleryPageOptions(
+                imageProvider: AssetImage('assets/images/pic1.jpg'),
+                minScale: PhotoViewComputedScale.contained,
+                maxScale: PhotoViewComputedScale.covered * 2,
+              );
+            },
+            scrollPhysics: BouncingScrollPhysics(),
+            backgroundDecoration: BoxDecoration(
+              color: Colors.black,
+            ),
+            pageController: PageController(),
+          ),
+        ),
       ),
     );
   }
