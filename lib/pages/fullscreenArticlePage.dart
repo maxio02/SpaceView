@@ -60,8 +60,7 @@ class FullscreenArticleScreen extends StatelessWidget {
                           style: TextStyle(fontSize: 16),
                           textAlign: TextAlign.left,
                         ),
-                        SizedBox(
-                            height: 20), // Add additional spacing as needed
+                        SizedBox(height: 20),
                       ],
                     ),
                   ),

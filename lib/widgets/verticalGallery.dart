@@ -21,32 +21,39 @@ class _VerticalGalleryState extends State<VerticalGallery> {
   }
 
   @override
-Widget build(BuildContext context) {
-  var screenSize = MediaQuery.of(context).size;
-  return Container(
-    height: screenSize.height,
-    child: ListView.builder(
-      itemCount: images.length,
-      scrollDirection: Axis.vertical,
-      prototypeItem: GalleryElement(image: images.first, title: titles.first, description: descriptions.first),
-      itemBuilder: (context, index) {
-        return GestureDetector(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => FullscreenArticleScreen(
+  Widget build(BuildContext context) {
+    var screenSize = MediaQuery.of(context).size;
+    return Container(
+      height: screenSize.height,
+      child: ListView.builder(
+        itemCount: images.length,
+        scrollDirection: Axis.vertical,
+        prototypeItem: GalleryElement(
+            image: images.first,
+            title: titles.first,
+            description: descriptions.first),
+        itemBuilder: (context, index) {
+          return GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => FullscreenArticleScreen(
+                          image: images[index],
+                          title: titles[index],
+                          description: descriptions[index],
+                        )),
+              );
+            },
+            child: GalleryElement(
                 image: images[index],
                 title: titles[index],
-                description: descriptions[index],
-              )),
-            );
-          },
-          child: GalleryElement(image: images[index], title: titles[index], description: descriptions[index]),
-        );
-      },
-    ),
-  );
-}
+                description: descriptions[index]),
+          );
+        },
+      ),
+    );
+  }
 
   Future<void> genVerticalGallery() async {
     await Future.delayed(Duration(seconds: 1));
