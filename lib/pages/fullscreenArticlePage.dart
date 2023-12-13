@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class FullscreenArticleScreen extends StatelessWidget {
-  final AssetImage image;
+  final ImageProvider image;
   final String title;
   final String description;
 
