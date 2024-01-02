@@ -12,75 +12,109 @@ class VerticalGallery extends StatefulWidget {
 }
 
 class _VerticalGalleryState extends State<VerticalGallery> {
-  List<ImageProvider> images = [AssetImage("./assets/images/loading_dummy.jpg")];
-  List<String> titles = [" "];
-  List<String> descriptions = [" "];
+  late Future<List<GalleryItem>> futureGalleryItems;
+  static const int batchSize = 15;
 
   @override
   void initState() {
     super.initState();
-    genVerticalGallery();
+    futureGalleryItems = genVerticalGallery();
   }
 
   @override
-Widget build(BuildContext context) {
-  var screenSize = MediaQuery.of(context).size;
-  return Container(
-    height: screenSize.height,
-    child: ListView.builder(
-      itemCount: images.length,
-      scrollDirection: Axis.vertical,
-      prototypeItem: GalleryElement(image: images.first, title: titles.first, description: descriptions.first),
-      itemBuilder: (context, index) {
-        return GestureDetector(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => FullscreenArticleScreen(
-                image: images[index],
-                title: titles[index],
-                description: descriptions[index],
-              )),
+  Widget build(BuildContext context) {
+    var screenSize = MediaQuery.of(context).size;
+    return Container(
+      height: screenSize.height,
+      child: FutureBuilder<List<GalleryItem>>(
+        future: genVerticalGallery(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(),
             );
-          },
-          child: GalleryElement(image: images[index], title: titles[index], description: descriptions[index]),
-        );
-      },
-    ),
-  );
-}
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Text('Error: ${snapshot.error}'),
+            );
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return Center(
+              child: Text('No data available.'),
+            );
+          } else {
+            return ListView.builder(
+              itemCount: snapshot.data!.length,
+              scrollDirection: Axis.vertical,
+              itemBuilder: (context, index) {
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => FullscreenArticleScreen(
+                          image: snapshot.data![index].image,
+                          title: snapshot.data![index].title,
+                          description: snapshot.data![index].description,
+                        ),
+                      ),
+                    );
+                  },
+                  child: GalleryElement(
+                    image: snapshot.data![index].image,
+                    title: snapshot.data![index].title,
+                    description: snapshot.data![index].description,
+                  ),
+                );
+              },
+            );
+          }
+        },
+      ),
+    );
+  }
 
-  Future<void> genVerticalGallery() async {
-  const String apiKey = '8g6pdCUfYtcLjyq1eJt3KI30xUccOMLhpK4KPai1';
-  const String apiUrl = 'https://api.nasa.gov/planetary/apod?api_key=$apiKey&count=10';
+  Future<List<GalleryItem>> genVerticalGallery() async {
+    const String apiKey = 'aKCPsASpnNuaWFu3nimYwrEbFaopliV273anXN6K';
+    const String apiUrl =
+        'https://api.nasa.gov/planetary/apod?api_key=$apiKey&count=$batchSize';
 
-  try {
-    final response = await http.get(Uri.parse(apiUrl));
-    if (response.statusCode == 200) {
-      List<dynamic> data = json.decode(response.body);
+    try {
+      final response = await http.get(Uri.parse(apiUrl));
+      if (response.statusCode == 200) {
+        List<dynamic> data = json.decode(response.body);
 
-      List<ImageProvider> newImages = [];
-      List<String> newTitles = [];
-      List<String> newDescriptions = [];
+        List<GalleryItem> newGalleryItems = [];
 
-      for (var item in data) {
-        newImages.add(NetworkImage(item['hdurl']));
-        newTitles.add(item['title']);
-        newDescriptions.add(item['explanation']);
+        for (var item in data) {
+          String title = item['title'] ?? 'No Title';
+          String description = item['explanation'] ?? 'No Description';
+
+          newGalleryItems.add(GalleryItem(
+            image: NetworkImage(item['hdurl'] ?? ''),
+            title: title,
+            description: description,
+          ));
+        }
+
+        return newGalleryItems;
+      } else {
+        throw Exception('Failed to load NASA data');
       }
-
-      if (!mounted) return;
-      setState(() {
-        images = newImages;
-        titles = newTitles;
-        descriptions = newDescriptions;
-      });
-    } else {
-      throw Exception('Failed to load NASA data');
+    } catch (e) {
+      print('Error fetching data: $e');
+      rethrow; // Re-throw the error to be caught by the FutureBuilder
     }
-  } catch (e) {
-    print('Error fetching data: $e');
-    // Handle error or show a message
   }
 }
+
+class GalleryItem {
+  final ImageProvider image;
+  final String title;
+  final String description;
+
+  GalleryItem({
+    required this.image,
+    required this.title,
+    required this.description,
+  });
 }
