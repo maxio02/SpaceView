@@ -1,8 +1,11 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:flutter_file_dialog/flutter_file_dialog.dart';
+import 'package:path_provider/path_provider.dart';
 
 class PicOfTheDayScreen extends StatefulWidget {
   const PicOfTheDayScreen({Key? key}) : super(key: key);
@@ -172,6 +175,15 @@ class FullScreenImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Save image to disk'),
+        actions: [
+          IconButton(
+            onPressed: () => _saveImage(context),
+            icon: const Icon(Icons.save),
+          ),
+        ],
+      ),
       body: Center(
         child: Hero(
           tag: 'picOfTheDayImage',
@@ -193,5 +205,33 @@ class FullScreenImage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> _saveImage(BuildContext context) async {
+    String? message;
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+
+    try {
+      final http.Response response = await http.get(Uri.parse(imageUrl));
+      final dir = await getTemporaryDirectory();
+      var timestamp = DateTime.now().millisecondsSinceEpoch;
+      var filename = '${dir.path}/space_view_$timestamp.png';
+
+      final file = File(filename);
+      await file.writeAsBytes(response.bodyBytes);
+
+      final params = SaveFileDialogParams(sourceFilePath: file.path);
+      final finalPath = await FlutterFileDialog.saveFile(params: params);
+
+      if (finalPath != null) {
+        message = 'Image saved to disk.';
+      }
+    } catch (e) {
+      message = 'An error occurred while saving the image.';
+    }
+
+    if (message != null) {
+      scaffoldMessenger.showSnackBar(SnackBar(content: Text(message)));
+    }
   }
 }
