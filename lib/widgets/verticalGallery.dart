@@ -53,6 +53,7 @@ class _VerticalGalleryState extends State<VerticalGallery> {
                       MaterialPageRoute(
                         builder: (context) => FullscreenArticleScreen(
                           image: snapshot.data![index].image,
+                          imageUrl: snapshot.data![index].imageUrl,
                           title: snapshot.data![index].title,
                           description: snapshot.data![index].description,
                         ),
@@ -86,11 +87,13 @@ class _VerticalGalleryState extends State<VerticalGallery> {
         List<GalleryItem> newGalleryItems = [];
 
         for (var item in data) {
+          String imageUrl = item['hdurl'] ?? '';
           String title = item['title'] ?? 'No Title';
           String description = item['explanation'] ?? 'No Description';
 
           newGalleryItems.add(GalleryItem(
-            image: NetworkImage(item['hdurl'] ?? ''),
+            image: NetworkImage(imageUrl),
+            imageUrl: imageUrl,
             title: title,
             description: description,
           ));
@@ -109,11 +112,13 @@ class _VerticalGalleryState extends State<VerticalGallery> {
 
 class GalleryItem {
   final ImageProvider image;
+  final String imageUrl;
   final String title;
   final String description;
 
   GalleryItem({
     required this.image,
+    required this.imageUrl,
     required this.title,
     required this.description,
   });

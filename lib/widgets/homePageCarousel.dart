@@ -52,6 +52,7 @@ class _HomePageCarouselState extends State<HomePageCarousel> {
                       MaterialPageRoute(
                         builder: (context) => FullscreenArticleScreen(
                           image: snapshot.data![index].image,
+                          imageUrl: snapshot.data![index].imageUrl,
                           title: snapshot.data![index].title,
                           description: snapshot.data![index].description,
                         ),
@@ -85,11 +86,13 @@ class _HomePageCarouselState extends State<HomePageCarousel> {
         List<GalleryItem> newCarouselItems = [];
 
         for (var item in data) {
+          String imageUrl = item['hdurl'] ?? '';
           String title = item['title'] ?? 'No Title';
           String description = item['explanation'] ?? 'No Description';
 
           newCarouselItems.add(GalleryItem(
-            image: NetworkImage(item['hdurl'] ?? ''),
+            image: NetworkImage(imageUrl),
+            imageUrl: imageUrl,
             title: title,
             description: description,
           ));
@@ -108,11 +111,13 @@ class _HomePageCarouselState extends State<HomePageCarousel> {
 
 class GalleryItem {
   final ImageProvider image;
+  final String imageUrl;
   final String title;
   final String description;
 
   GalleryItem({
     required this.image,
+    required this.imageUrl,
     required this.title,
     required this.description,
   });
