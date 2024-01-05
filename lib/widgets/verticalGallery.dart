@@ -3,6 +3,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../pages/fullscreenArticlePage.dart';
 import 'galleryElement.dart';
+import 'package:chewie/chewie.dart';
+import 'package:video_player/video_player.dart';
 
 class VerticalGallery extends StatefulWidget {
   VerticalGallery({Key? key}) : super(key: key);
@@ -15,10 +17,35 @@ class _VerticalGalleryState extends State<VerticalGallery> {
   late Future<List<GalleryItem>> futureGalleryItems;
   static const int batchSize = 15;
 
+  late VideoPlayerController _videoPlayerController;
+  late ChewieController _chewieController;
+
   @override
   void initState() {
     super.initState();
     futureGalleryItems = genVerticalGallery();
+    _initializeVideo();
+  }
+
+  void _initializeVideo() {
+    _videoPlayerController = VideoPlayerController.networkUrl(Uri.parse(
+        'https://images-assets.nasa.gov/video/20190530-SPITZRf-0001-Stars%20of%20Cephus/20190530-SPITZRf-0001-Stars%20of%20Cephus~orig.mp4'))
+      ..initialize().then((_) {
+        // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
+        setState(() {});
+      });
+    _chewieController = ChewieController(
+      videoPlayerController: _videoPlayerController,
+      autoPlay: false, // Set to true if you want the video to auto-play
+      looping: false, // Set to true for video looping
+    );
+  }
+
+  @override
+  void dispose() {
+    _videoPlayerController.dispose();
+    _chewieController.dispose();
+    super.dispose();
   }
 
   @override
@@ -42,31 +69,45 @@ class _VerticalGalleryState extends State<VerticalGallery> {
               child: Text('No data available.'),
             );
           } else {
-            return ListView.builder(
-              itemCount: snapshot.data!.length,
-              scrollDirection: Axis.vertical,
-              itemBuilder: (context, index) {
-                return GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => FullscreenArticleScreen(
+            return Column(
+              children: [
+                // Video Player
+                Container(
+                  height: screenSize.height * 0.25,
+                  child: Chewie(
+                    controller: _chewieController,
+                  ),
+                ),
+                // Gallery
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: snapshot.data!.length,
+                    scrollDirection: Axis.vertical,
+                    itemBuilder: (context, index) {
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => FullscreenArticleScreen(
+                                image: snapshot.data![index].image,
+                                imageUrl: snapshot.data![index].imageUrl,
+                                title: snapshot.data![index].title,
+                                description: snapshot.data![index].description,
+                              ),
+                            ),
+                          );
+                        },
+                        child: GalleryElement(
                           image: snapshot.data![index].image,
-                          imageUrl: snapshot.data![index].imageUrl,
                           title: snapshot.data![index].title,
                           description: snapshot.data![index].description,
                         ),
-                      ),
-                    );
-                  },
-                  child: GalleryElement(
-                    image: snapshot.data![index].image,
-                    title: snapshot.data![index].title,
-                    description: snapshot.data![index].description,
+                      );
+                    },
                   ),
-                );
-              },
+                ),
+              ],
             );
           }
         },
