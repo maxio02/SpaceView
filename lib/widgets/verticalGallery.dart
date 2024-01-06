@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:space_view/pages/videoPage.dart';
 import 'dart:convert';
 import '../pages/fullscreenArticlePage.dart';
 import 'galleryElement.dart';
@@ -14,6 +15,9 @@ class VerticalGallery extends StatefulWidget {
 class _VerticalGalleryState extends State<VerticalGallery> {
   late Future<List<GalleryItem>> futureGalleryItems;
   static const int batchSize = 15;
+  static const String videoUrl =
+      'https://images-assets.nasa.gov/video/20190530-SPITZRf-0001-Stars%20of%20Cephus/20190530-SPITZRf-0001-Stars%20of%20Cephus~orig.mp4';
+  static const String videoTitle = 'Stars of Cepheus';
 
   @override
   void initState() {
@@ -42,31 +46,68 @@ class _VerticalGalleryState extends State<VerticalGallery> {
               child: Text('No data available.'),
             );
           } else {
-            return ListView.builder(
-              itemCount: snapshot.data!.length,
-              scrollDirection: Axis.vertical,
-              itemBuilder: (context, index) {
-                return GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => FullscreenArticleScreen(
+            return Column(
+              children: [
+                // Navigate to video screen
+                Container(
+                  margin:
+                      EdgeInsets.only(top: 25), // Adjust top margin as needed
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => VideoScreen(
+                            videoLink: videoUrl,
+                            videoTitle: videoTitle,
+                          ),
+                        ),
+                      );
+                    },
+                    style: TextButton.styleFrom(
+                      foregroundColor: Theme.of(context)
+                          .colorScheme
+                          .secondary, // Button text color
+                      backgroundColor: Theme.of(context)
+                          .primaryColor, // Button background color
+                      textStyle: TextStyle(
+                        fontSize: 20,
+                      ),
+                    ),
+                    child: Text("Watch a Video"),
+                  ),
+                ),
+
+                // Gallery
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: snapshot.data!.length,
+                    scrollDirection: Axis.vertical,
+                    itemBuilder: (context, index) {
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => FullscreenArticleScreen(
+                                image: snapshot.data![index].image,
+                                imageUrl: snapshot.data![index].imageUrl,
+                                title: snapshot.data![index].title,
+                                description: snapshot.data![index].description,
+                              ),
+                            ),
+                          );
+                        },
+                        child: GalleryElement(
                           image: snapshot.data![index].image,
-                          imageUrl: snapshot.data![index].imageUrl,
                           title: snapshot.data![index].title,
                           description: snapshot.data![index].description,
                         ),
-                      ),
-                    );
-                  },
-                  child: GalleryElement(
-                    image: snapshot.data![index].image,
-                    title: snapshot.data![index].title,
-                    description: snapshot.data![index].description,
+                      );
+                    },
                   ),
-                );
-              },
+                ),
+              ],
             );
           }
         },
