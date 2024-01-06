@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:space_view/pages/videoPage.dart';
 import 'dart:convert';
 import '../pages/fullscreenArticlePage.dart';
 import 'galleryElement.dart';
-import 'package:chewie/chewie.dart';
-import 'package:video_player/video_player.dart';
 
 class VerticalGallery extends StatefulWidget {
   VerticalGallery({Key? key}) : super(key: key);
@@ -16,36 +15,14 @@ class VerticalGallery extends StatefulWidget {
 class _VerticalGalleryState extends State<VerticalGallery> {
   late Future<List<GalleryItem>> futureGalleryItems;
   static const int batchSize = 15;
-
-  late VideoPlayerController _videoPlayerController;
-  late ChewieController _chewieController;
+  static const String videoUrl =
+      'https://images-assets.nasa.gov/video/20190530-SPITZRf-0001-Stars%20of%20Cephus/20190530-SPITZRf-0001-Stars%20of%20Cephus~orig.mp4';
+  static const String videoTitle = 'Stars of Cepheus';
 
   @override
   void initState() {
     super.initState();
     futureGalleryItems = genVerticalGallery();
-    _initializeVideo();
-  }
-
-  void _initializeVideo() {
-    _videoPlayerController = VideoPlayerController.networkUrl(Uri.parse(
-        'https://images-assets.nasa.gov/video/20190530-SPITZRf-0001-Stars%20of%20Cephus/20190530-SPITZRf-0001-Stars%20of%20Cephus~orig.mp4'))
-      ..initialize().then((_) {
-        // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
-        setState(() {});
-      });
-    _chewieController = ChewieController(
-      videoPlayerController: _videoPlayerController,
-      autoPlay: false, // Set to true if you want the video to auto-play
-      looping: false, // Set to true for video looping
-    );
-  }
-
-  @override
-  void dispose() {
-    _videoPlayerController.dispose();
-    _chewieController.dispose();
-    super.dispose();
   }
 
   @override
@@ -71,13 +48,36 @@ class _VerticalGalleryState extends State<VerticalGallery> {
           } else {
             return Column(
               children: [
-                // Video Player
+                // Navigate to video screen
                 Container(
-                  height: screenSize.height * 0.25,
-                  child: Chewie(
-                    controller: _chewieController,
+                  margin:
+                      EdgeInsets.only(top: 25), // Adjust top margin as needed
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => VideoScreen(
+                            videoLink: videoUrl,
+                            videoTitle: videoTitle,
+                          ),
+                        ),
+                      );
+                    },
+                    style: TextButton.styleFrom(
+                      foregroundColor: Theme.of(context)
+                          .colorScheme
+                          .secondary, // Button text color
+                      backgroundColor: Theme.of(context)
+                          .primaryColor, // Button background color
+                      textStyle: TextStyle(
+                        fontSize: 20,
+                      ),
+                    ),
+                    child: Text("Watch a Video"),
                   ),
                 ),
+
                 // Gallery
                 Expanded(
                   child: ListView.builder(
