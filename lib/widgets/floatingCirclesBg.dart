@@ -11,7 +11,7 @@ class Circle {
 
 extension CustomThemeColors on ThemeData {
   Color get circleColor => this.brightness == Brightness.light 
-      ? Color.fromARGB(90, 0, 0, 0) // Color for light theme
+      ? Color.fromARGB(120, 0, 0, 0) // Color for light theme
       : Color.fromARGB(124, 255, 255, 255);  // Color for dark theme
 }
 
@@ -25,6 +25,7 @@ class _FloatingCirclesBgState extends State<FloatingCirclesBg> with SingleTicker
   List<Circle> _circles = [];
   final int numberOfCircles = 30;
   final Random random = Random();
+  Size _size = Size.zero;
 
   @override
   void initState() {
@@ -40,16 +41,16 @@ class _FloatingCirclesBgState extends State<FloatingCirclesBg> with SingleTicker
 void initializeCircles() {
   WidgetsBinding.instance?.addPostFrameCallback((_) {
     if (mounted) {
-      final Size size = context.size ?? Size.zero;
+      _size = context.size ?? Size.zero;
       double radius;
-      _circles.clear(); // Clearing any existing circles
+      _circles.clear();
 
       for (int i = 0; i < numberOfCircles; i++) {
         radius = random.nextDouble() * 10 + 15;
         _circles.add(Circle(
           Offset(
-            random.nextDouble() * (size.width - 2 * radius) + radius,
-            random.nextDouble() * (size.height - 2 * radius) + radius
+            random.nextDouble() * (_size.width - 2 * radius) + radius,
+            random.nextDouble() * (_size.height - 2 * radius) + radius
           ), 
           Offset(random.nextDouble() * 1 - 0.5, random.nextDouble() * 1 - 0.5),
           radius
@@ -62,15 +63,14 @@ void initializeCircles() {
 }
 
   void updateCircles() {
-    Size size = context.size ?? Size.zero;
     for (var circle in _circles) {
       Offset newPos = circle.position + circle.direction;
       
       // Bounce off the walls
-      if (newPos.dx <= circle.radius || newPos.dx >= size.width - circle.radius) {
+      if (newPos.dx <= circle.radius || newPos.dx >= _size.width - circle.radius) {
         circle.direction = Offset(-circle.direction.dx, circle.direction.dy);
       }
-      if (newPos.dy <= circle.radius || newPos.dy >= size.height - circle.radius) {
+      if (newPos.dy <= circle.radius || newPos.dy >= _size.height - circle.radius) {
         circle.direction = Offset(circle.direction.dx, -circle.direction.dy);
       }
 
