@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:space_view/widgets/floatingCirclesBg.dart';
 
 import 'galleryPage.dart';
 import 'homePage.dart';
@@ -28,14 +29,17 @@ class _MainscreenState extends State<Mainscreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         extendBody: true,
-        body: Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage("assets/images/background_temp_image.png"),
-              fit: BoxFit.cover,
-            ),
-          ),
-          child: _screens[selectedIndex],
+        body: Stack(
+          children: [
+            FloatingCirclesBg(),
+          Positioned.fill(
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
+            child: Container(
+              color: Colors.transparent,
+            ),),)
+
+            , _screens[selectedIndex]],
         ),
         bottomNavigationBar: Container(
           decoration: BoxDecoration(
