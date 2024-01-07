@@ -14,7 +14,7 @@ ThemeData lightTheme = ThemeData(
 ThemeData darkTheme = ThemeData(
   brightness: Brightness.dark,
   colorScheme: ColorScheme.dark(secondary: Color.fromRGBO(125, 122, 255, 1)),
-  scaffoldBackgroundColor: Colors.blueGrey[800],
+  scaffoldBackgroundColor: Color.fromARGB(255, 14, 16, 22),
   primaryColor: Color(0xFF1B1B1C),
   navigationBarTheme: NavigationBarThemeData(
   backgroundColor: Color.fromRGBO(35, 39, 48, 0.57)
