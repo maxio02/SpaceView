@@ -1,7 +1,8 @@
 import 'package:better_player/better_player.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
-class VideoScreen extends StatelessWidget {
+class VideoScreen extends StatefulWidget {
   final String videoLink;
   final String videoTitle;
 
@@ -10,10 +11,35 @@ class VideoScreen extends StatelessWidget {
       : super(key: key);
 
   @override
+  _VideoScreenState createState() => _VideoScreenState();
+}
+
+class _VideoScreenState extends State<VideoScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // Set preferred orientations only for landscape when entering fullscreen mode
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+  }
+
+  @override
+  void dispose() {
+    // Reset preferred orientations when exiting fullscreen mode
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(videoTitle),
+        title: Text(widget.videoTitle),
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
@@ -28,7 +54,7 @@ class VideoScreen extends StatelessWidget {
           children: [
             Expanded(
               child: BetterPlayer.network(
-                videoLink,
+                widget.videoLink,
                 betterPlayerConfiguration: BetterPlayerConfiguration(
                   aspectRatio: 16 / 9,
                   autoPlay: true,
