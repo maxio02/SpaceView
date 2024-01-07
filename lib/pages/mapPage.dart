@@ -15,12 +15,12 @@ class _MapScreenState extends State<MapScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Panorama(
-        child: Image.asset('assets/images/starmap_2020_8k.jpg'),
         sensorControl: SensorControl.AbsoluteOrientation,
         sensitivity: 0,
         longitude: _gyroY,
         latitude: _gyroX,
         animSpeed: 0.00001,
+        child: Image.asset('assets/images/starmap_2020_8k.jpg'),
       ),
     );
   }

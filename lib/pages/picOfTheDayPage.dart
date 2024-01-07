@@ -7,6 +7,9 @@ import 'dart:convert';
 import 'package:flutter_file_dialog/flutter_file_dialog.dart';
 import 'package:path_provider/path_provider.dart';
 
+import 'package:space_view/managers/audioManager.dart';
+import 'package:provider/provider.dart';
+
 class PicOfTheDayScreen extends StatefulWidget {
   const PicOfTheDayScreen({Key? key}) : super(key: key);
 
@@ -25,6 +28,8 @@ class _PicOfTheDayScreenState extends State<PicOfTheDayScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final AudioManager audioManager = Provider.of<AudioManager>(context);
+
     var screenSize = MediaQuery.of(context).size;
     return Scaffold(
       body: Stack(
@@ -61,6 +66,7 @@ class _PicOfTheDayScreenState extends State<PicOfTheDayScreen> {
                           tag: 'picOfTheDayImage',
                           child: GestureDetector(
                             onTap: () {
+                              audioManager.playClickSound();
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(

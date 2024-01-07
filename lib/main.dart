@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:space_view/pages/splashscreen.dart';
 import 'package:space_view/theme/themeProvider.dart';
+import 'package:space_view/managers/audioManager.dart';
 import 'package:space_view/theme/themeConstants.dart';
 
 void main() {
@@ -20,8 +21,11 @@ class MyApp extends StatelessWidget {
       DeviceOrientation.portraitDown,
     ]);
 
-    return ChangeNotifierProvider(
-      create: (context) => ThemeProvider(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => ThemeProvider()),
+        Provider(create: (context) => AudioManager()),
+      ],
       builder: (context, _) {
         final themeProvider = Provider.of<ThemeProvider>(context);
 

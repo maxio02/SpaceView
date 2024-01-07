@@ -47,6 +47,7 @@ dependencies:
   flutter_file_dialog: ^3.0.2
   better_player: ^0.0.83
   panorama: ^0.4.1
+  audioplayers: ^5.2.1
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -107,3 +108,4 @@ flutter:
   assets:
     - assets/vectors/
     - assets/images/
+    - assets/sounds/click.mp3

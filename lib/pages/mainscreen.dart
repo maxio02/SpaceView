@@ -3,6 +3,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:space_view/widgets/floatingCirclesBg.dart';
+import 'package:space_view/managers/audioManager.dart';
+import 'package:provider/provider.dart';
 
 import 'galleryPage.dart';
 import 'homePage.dart';
@@ -27,19 +29,23 @@ class _MainscreenState extends State<Mainscreen> {
 
   @override
   Widget build(BuildContext context) {
+    final AudioManager audioManager = Provider.of<AudioManager>(context);
+
     return Scaffold(
         extendBody: true,
         body: Stack(
           children: [
             FloatingCirclesBg(),
-          Positioned.fill(
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
-            child: Container(
-              color: Colors.transparent,
-            ),),)
-
-            , _screens[selectedIndex]],
+            Positioned.fill(
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
+                child: Container(
+                  color: Colors.transparent,
+                ),
+              ),
+            ),
+            _screens[selectedIndex]
+          ],
         ),
         bottomNavigationBar: Container(
           decoration: BoxDecoration(
@@ -60,6 +66,7 @@ class _MainscreenState extends State<Mainscreen> {
                     selectedIndex = index;
                     HapticFeedback.lightImpact();
                   });
+                  audioManager.playClickSound();
                 },
                 type: BottomNavigationBarType.fixed,
                 items: const <BottomNavigationBarItem>[

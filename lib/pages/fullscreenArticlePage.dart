@@ -6,6 +6,9 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_file_dialog/flutter_file_dialog.dart';
 import 'package:path_provider/path_provider.dart';
 
+import 'package:space_view/managers/audioManager.dart';
+import 'package:provider/provider.dart';
+
 class FullscreenArticleScreen extends StatelessWidget {
   final ImageProvider image;
   final String imageUrl;
@@ -22,6 +25,8 @@ class FullscreenArticleScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AudioManager audioManager = Provider.of<AudioManager>(context);
+
     var screenSize = MediaQuery.of(context).size;
 
     return Scaffold(
@@ -43,6 +48,7 @@ class FullscreenArticleScreen extends StatelessWidget {
                     tag: 'articleImage', // Unique tag for the hero animation
                     child: GestureDetector(
                       onTap: () {
+                        audioManager.playClickSound();
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -109,12 +115,17 @@ class FullScreenImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AudioManager audioManager = Provider.of<AudioManager>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Save image to disk'),
         actions: [
           IconButton(
-            onPressed: () => _saveImage(context),
+            onPressed: () {
+              audioManager.playClickSound();
+              _saveImage(context);
+            },
             icon: const Icon(Icons.save),
           ),
         ],

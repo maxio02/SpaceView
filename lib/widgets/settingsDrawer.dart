@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:space_view/widgets/themeSwitch.dart';
+import 'package:space_view/widgets/soundSwitch.dart';
 
 class SettingsDrawer extends StatelessWidget {
   const SettingsDrawer({Key? key}) : super(key: key);
@@ -18,15 +19,15 @@ class SettingsDrawer extends StatelessWidget {
           decoration: BoxDecoration(
             color: Theme.of(context).primaryColor.withAlpha(200),
             borderRadius: BorderRadius.circular(26),
-            boxShadow: [
+            boxShadow: const [
               BoxShadow(
                 color: Colors.black26,
                 blurRadius: 10,
-                offset: const Offset(0, 2),
+                offset: Offset(0, 2),
               ),
             ],
           ),
-          child: Column(
+          child: const Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               Row(
@@ -46,7 +47,7 @@ class SettingsDrawer extends StatelessWidget {
                     "Sound",
                     style: TextStyle(fontSize: 20),
                   ),
-                  Switch.adaptive(value: false, onChanged: (bool newValue) {})
+                  SoundSwitch(),
                 ],
               ),
               Row(

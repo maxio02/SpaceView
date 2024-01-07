@@ -5,6 +5,9 @@ import 'dart:convert';
 import '../pages/fullscreenArticlePage.dart';
 import 'galleryElement.dart';
 
+import 'package:space_view/managers/audioManager.dart';
+import 'package:provider/provider.dart';
+
 class VerticalGallery extends StatefulWidget {
   VerticalGallery({Key? key}) : super(key: key);
 
@@ -27,7 +30,10 @@ class _VerticalGalleryState extends State<VerticalGallery> {
 
   @override
   Widget build(BuildContext context) {
+    final AudioManager audioManager = Provider.of<AudioManager>(context);
+
     var screenSize = MediaQuery.of(context).size;
+
     return Container(
       height: screenSize.height,
       child: FutureBuilder<List<GalleryItem>>(
@@ -48,12 +54,11 @@ class _VerticalGalleryState extends State<VerticalGallery> {
           } else {
             return Column(
               children: [
-                // Navigate to video screen
                 Container(
-                  margin:
-                      EdgeInsets.only(top: 25), // Adjust top margin as needed
+                  margin: EdgeInsets.only(top: 25),
                   child: TextButton(
                     onPressed: () {
+                      audioManager.playClickSound();
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -86,6 +91,7 @@ class _VerticalGalleryState extends State<VerticalGallery> {
                     itemBuilder: (context, index) {
                       return GestureDetector(
                         onTap: () {
+                          audioManager.playClickSound();
                           Navigator.push(
                             context,
                             MaterialPageRoute(

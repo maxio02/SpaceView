@@ -4,6 +4,9 @@ import 'dart:convert';
 import '../pages/fullscreenArticlePage.dart';
 import 'carouselElement.dart';
 
+import 'package:space_view/managers/audioManager.dart';
+import 'package:provider/provider.dart';
+
 class HomePageCarousel extends StatefulWidget {
   HomePageCarousel({Key? key}) : super(key: key);
 
@@ -23,6 +26,7 @@ class _HomePageCarouselState extends State<HomePageCarousel> {
 
   @override
   Widget build(BuildContext context) {
+    final AudioManager audioManager = Provider.of<AudioManager>(context);
     return Container(
       height: 300,
       child: FutureBuilder<List<GalleryItem>>(
@@ -47,6 +51,7 @@ class _HomePageCarouselState extends State<HomePageCarousel> {
               itemBuilder: (context, index) {
                 return GestureDetector(
                   onTap: () {
+                    audioManager.playClickSound();
                     Navigator.push(
                       context,
                       MaterialPageRoute(
