@@ -27,7 +27,7 @@ class SettingsDrawer extends StatelessWidget {
               ),
             ],
           ),
-          child: const Column(
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               Row(
@@ -37,7 +37,7 @@ class SettingsDrawer extends StatelessWidget {
                     "Dark Mode",
                     style: TextStyle(fontSize: 20),
                   ),
-                  ThemeSwitch()
+                  ThemeSwitch(),
                 ],
               ),
               Row(
@@ -53,7 +53,12 @@ class SettingsDrawer extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("About", style: TextStyle(fontSize: 20)),
+                  GestureDetector(
+                    onTap: () {
+                      _showAboutDialog(context);
+                    },
+                    child: Text("About", style: TextStyle(fontSize: 20)),
+                  ),
                   Icon(Icons.info_outline_rounded),
                 ],
               )
@@ -61,6 +66,27 @@ class SettingsDrawer extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  void _showAboutDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('About'),
+          content:
+              Text('This app uses media data from NASA...'), // TODO formulate
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('OK'),
+            ),
+          ],
+        );
+      },
     );
   }
 }
