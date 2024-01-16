@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:space_view/widgets/galleryElement.dart';
 import 'dart:convert';
 import '../pages/fullscreenArticlePage.dart';
 import 'carouselElement.dart';
@@ -15,7 +16,7 @@ class HomePageCarousel extends StatefulWidget {
 }
 
 class _HomePageCarouselState extends State<HomePageCarousel> {
-  late Future<List<GalleryItem>> futureCarouselItems;
+  late Future<List<GalleryElement>> futureCarouselItems;
   static const int batchSize = 5;
 
   @override
@@ -29,7 +30,7 @@ class _HomePageCarouselState extends State<HomePageCarousel> {
     final AudioManager audioManager = Provider.of<AudioManager>(context);
     return Container(
       height: 300,
-      child: FutureBuilder<List<GalleryItem>>(
+      child: FutureBuilder<List<GalleryElement>>(
         future: futureCarouselItems,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -56,7 +57,6 @@ class _HomePageCarouselState extends State<HomePageCarousel> {
                       context,
                       MaterialPageRoute(
                         builder: (context) => FullscreenArticleScreen(
-                          image: snapshot.data![index].image,
                           imageUrl: snapshot.data![index].imageUrl,
                           title: snapshot.data![index].title,
                           description: snapshot.data![index].description,
@@ -65,7 +65,7 @@ class _HomePageCarouselState extends State<HomePageCarousel> {
                     );
                   },
                   child: CarouselElement(
-                    image: snapshot.data![index].image,
+                    imageUrl: snapshot.data![index].imageUrl,
                     title: snapshot.data![index].title,
                     description: snapshot.data![index].description,
                   ),
@@ -78,7 +78,7 @@ class _HomePageCarouselState extends State<HomePageCarousel> {
     );
   }
 
-  Future<List<GalleryItem>> genHomePageCarousel() async {
+  Future<List<GalleryElement>> genHomePageCarousel() async {
     const String apiKey = 'aKCPsASpnNuaWFu3nimYwrEbFaopliV273anXN6K';
     const String apiUrl =
         'https://api.nasa.gov/planetary/apod?api_key=$apiKey&count=$batchSize';
@@ -88,15 +88,14 @@ class _HomePageCarouselState extends State<HomePageCarousel> {
       if (response.statusCode == 200) {
         List<dynamic> data = json.decode(response.body);
 
-        List<GalleryItem> newCarouselItems = [];
+        List<GalleryElement> newCarouselItems = [];
 
         for (var item in data) {
           String imageUrl = item['hdurl'] ?? '';
           String title = item['title'] ?? 'No Title';
           String description = item['explanation'] ?? 'No Description';
 
-          newCarouselItems.add(GalleryItem(
-            image: NetworkImage(imageUrl),
+          newCarouselItems.add(GalleryElement(
             imageUrl: imageUrl,
             title: title,
             description: description,
@@ -112,18 +111,4 @@ class _HomePageCarouselState extends State<HomePageCarousel> {
       rethrow;
     }
   }
-}
-
-class GalleryItem {
-  final ImageProvider image;
-  final String imageUrl;
-  final String title;
-  final String description;
-
-  GalleryItem({
-    required this.image,
-    required this.imageUrl,
-    required this.title,
-    required this.description,
-  });
 }

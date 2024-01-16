@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
@@ -48,7 +49,7 @@ class _PicOfTheDayScreenState extends State<PicOfTheDayScreen> {
                   return Center(
                     child: Column(
                       children: [
-                        SizedBox(height: screenSize.height/5),
+                        SizedBox(height: screenSize.height / 5),
                         CircularProgressIndicator(),
                       ],
                     ),
@@ -84,11 +85,20 @@ class _PicOfTheDayScreenState extends State<PicOfTheDayScreen> {
                             child: Container(
                               width: screenSize.width,
                               height: screenSize.width,
-                              decoration: BoxDecoration(
-                                image: DecorationImage(
-                                  fit: BoxFit.cover,
-                                  image: NetworkImage(snapshot.data!.imageUrl),
+                              child: CachedNetworkImage(
+                                fit: BoxFit.cover,
+                                imageUrl: snapshot.data!.imageUrl,
+                                progressIndicatorBuilder:
+                                    (context, url, downloadProgress) => Center(
+                                  child: SizedBox(
+                                    width: screenSize.width * 0.15,
+                                    height: screenSize.width * 0.15,
+                                    child: CircularProgressIndicator(
+                                        value: downloadProgress.progress),
+                                  ),
                                 ),
+                                errorWidget: (context, url, error) =>
+                                    Icon(Icons.error),
                               ),
                             ),
                           ),

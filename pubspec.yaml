@@ -52,6 +52,7 @@ dependencies:
       git:
         url: https://github.com/zesage/motion_sensors
         ref: master
+  cached_network_image: ^3.3.1
 
 
 dev_dependencies:
@@ -110,4 +111,4 @@ flutter:
   assets:
     - assets/vectors/
     - assets/images/
-    - assets/sounds/click.mp3
+    - assets/sounds/click.wav

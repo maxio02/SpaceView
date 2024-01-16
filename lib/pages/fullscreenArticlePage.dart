@@ -10,14 +10,12 @@ import 'package:space_view/managers/audioManager.dart';
 import 'package:provider/provider.dart';
 
 class FullscreenArticleScreen extends StatelessWidget {
-  final ImageProvider image;
   final String imageUrl;
   final String title;
   final String description;
 
   const FullscreenArticleScreen({
     Key? key,
-    required this.image,
     required this.imageUrl,
     required this.title,
     required this.description,
@@ -53,7 +51,6 @@ class FullscreenArticleScreen extends StatelessWidget {
                           context,
                           MaterialPageRoute(
                             builder: (context) => FullScreenImage(
-                              imageProvider: image,
                               imageUrl: imageUrl,
                             ),
                           ),
@@ -65,7 +62,7 @@ class FullscreenArticleScreen extends StatelessWidget {
                         decoration: BoxDecoration(
                           image: DecorationImage(
                             fit: BoxFit.cover,
-                            image: image,
+                            image: NetworkImage(imageUrl),
                           ),
                         ),
                       ),
@@ -106,11 +103,10 @@ class FullscreenArticleScreen extends StatelessWidget {
 }
 
 class FullScreenImage extends StatelessWidget {
-  final ImageProvider imageProvider;
   final String imageUrl;
 
   const FullScreenImage(
-      {Key? key, required this.imageProvider, required this.imageUrl})
+      {Key? key,  required this.imageUrl})
       : super(key: key);
 
   @override
@@ -137,7 +133,7 @@ class FullScreenImage extends StatelessWidget {
             itemCount: 1,
             builder: (context, index) {
               return PhotoViewGalleryPageOptions(
-                imageProvider: imageProvider,
+                imageProvider: NetworkImage(imageUrl),
                 minScale: PhotoViewComputedScale.contained,
                 maxScale: PhotoViewComputedScale.covered * 2,
               );

@@ -1,13 +1,14 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class GalleryElement extends StatelessWidget {
-  final ImageProvider image;
+  final String imageUrl;
   final String title;
   final String description;
 
   const GalleryElement(
       {Key? key,
-      required this.image,
+      required this.imageUrl,
       required this.title,
       required this.description})
       : super(key: key);
@@ -24,11 +25,24 @@ class GalleryElement extends StatelessWidget {
           borderRadius: BorderRadius.circular(26),
         ),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Container(
+          ClipRRect(
+            borderRadius: BorderRadius.circular(19),
+            child: CachedNetworkImage(
+              fit: BoxFit.cover,
               height: 330,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(19),
-                  image: DecorationImage(fit: BoxFit.cover, image: image))),
+              width: double.infinity,
+              imageUrl: imageUrl,
+              progressIndicatorBuilder: (context, url, downloadProgress) =>
+                  Center(
+                child: SizedBox(
+                  width: 330 * 0.15,
+                  height: 330 * 0.15,
+                  child: CircularProgressIndicator(value: downloadProgress.progress),
+                ),
+              ),
+              errorWidget: (context, url, error) => Icon(Icons.error),
+            ),
+          ),
           SizedBox(height: 10),
           Text(
             title,

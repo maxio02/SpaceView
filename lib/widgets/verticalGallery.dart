@@ -16,7 +16,7 @@ class VerticalGallery extends StatefulWidget {
 }
 
 class _VerticalGalleryState extends State<VerticalGallery> {
-  late Future<List<GalleryItem>> futureGalleryItems;
+  late Future<List<GalleryElement>> futureGalleryElements;
   static const int batchSize = 15;
   static const String videoUrl =
       'https://images-assets.nasa.gov/video/20190530-SPITZRf-0001-Stars%20of%20Cephus/20190530-SPITZRf-0001-Stars%20of%20Cephus~orig.mp4';
@@ -25,7 +25,7 @@ class _VerticalGalleryState extends State<VerticalGallery> {
   @override
   void initState() {
     super.initState();
-    futureGalleryItems = genVerticalGallery();
+    futureGalleryElements = genVerticalGallery();
   }
 
   @override
@@ -36,7 +36,7 @@ class _VerticalGalleryState extends State<VerticalGallery> {
 
     return Container(
       height: screenSize.height,
-      child: FutureBuilder<List<GalleryItem>>(
+      child: FutureBuilder<List<GalleryElement>>(
         future: genVerticalGallery(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -96,7 +96,6 @@ class _VerticalGalleryState extends State<VerticalGallery> {
                             context,
                             MaterialPageRoute(
                               builder: (context) => FullscreenArticleScreen(
-                                image: snapshot.data![index].image,
                                 imageUrl: snapshot.data![index].imageUrl,
                                 title: snapshot.data![index].title,
                                 description: snapshot.data![index].description,
@@ -105,7 +104,7 @@ class _VerticalGalleryState extends State<VerticalGallery> {
                           );
                         },
                         child: GalleryElement(
-                          image: snapshot.data![index].image,
+                          imageUrl: snapshot.data![index].imageUrl,
                           title: snapshot.data![index].title,
                           description: snapshot.data![index].description,
                         ),
@@ -121,7 +120,7 @@ class _VerticalGalleryState extends State<VerticalGallery> {
     );
   }
 
-  Future<List<GalleryItem>> genVerticalGallery() async {
+  Future<List<GalleryElement>> genVerticalGallery() async {
     const String apiKey = 'aKCPsASpnNuaWFu3nimYwrEbFaopliV273anXN6K';
     const String apiUrl =
         'https://api.nasa.gov/planetary/apod?api_key=$apiKey&count=$batchSize';
@@ -131,15 +130,14 @@ class _VerticalGalleryState extends State<VerticalGallery> {
       if (response.statusCode == 200) {
         List<dynamic> data = json.decode(response.body);
 
-        List<GalleryItem> newGalleryItems = [];
+        List<GalleryElement> newGalleryItems = [];
 
         for (var item in data) {
           String imageUrl = item['hdurl'] ?? '';
           String title = item['title'] ?? 'No Title';
           String description = item['explanation'] ?? 'No Description';
-
-          newGalleryItems.add(GalleryItem(
-            image: NetworkImage(imageUrl),
+          
+          newGalleryItems.add(GalleryElement(
             imageUrl: imageUrl,
             title: title,
             description: description,
@@ -155,18 +153,4 @@ class _VerticalGalleryState extends State<VerticalGallery> {
       rethrow; // Re-throw the error to be caught by the FutureBuilder
     }
   }
-}
-
-class GalleryItem {
-  final ImageProvider image;
-  final String imageUrl;
-  final String title;
-  final String description;
-
-  GalleryItem({
-    required this.image,
-    required this.imageUrl,
-    required this.title,
-    required this.description,
-  });
 }

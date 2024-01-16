@@ -74,7 +74,6 @@ class _MapScreenState extends State<MapScreen> {
                 context,
                 MaterialPageRoute(
                   builder: (context) => FullscreenArticleScreen(
-                    image: NetworkImage(constellation.imageUrl),
                     imageUrl: constellation.imageUrl,
                     title: '${constellation.name} constellation',
                     description: constellation.description,
