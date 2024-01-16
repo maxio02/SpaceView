@@ -1,3 +1,7 @@
+import 'dart:async';
+import 'dart:typed_data';
+import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
@@ -8,17 +12,17 @@ import 'package:path_provider/path_provider.dart';
 
 import 'package:space_view/managers/audioManager.dart';
 import 'package:provider/provider.dart';
+import 'package:space_view/widgets/galleryElementBase.dart';
+import 'package:space_view/widgets/verticalGalleryElement.dart';
 
 class FullscreenArticleScreen extends StatelessWidget {
-  final String imageUrl;
-  final String title;
-  final String description;
+  final GalleryElementBase galleryElement;
+  final ImageProvider imageProvider;
 
   const FullscreenArticleScreen({
     Key? key,
-    required this.imageUrl,
-    required this.title,
-    required this.description,
+    required this.galleryElement,
+    required this.imageProvider
   }) : super(key: key);
 
   @override
@@ -51,7 +55,7 @@ class FullscreenArticleScreen extends StatelessWidget {
                           context,
                           MaterialPageRoute(
                             builder: (context) => FullScreenImage(
-                              imageUrl: imageUrl,
+                              imageProvider: imageProvider,
                             ),
                           ),
                         );
@@ -62,7 +66,7 @@ class FullscreenArticleScreen extends StatelessWidget {
                         decoration: BoxDecoration(
                           image: DecorationImage(
                             fit: BoxFit.cover,
-                            image: NetworkImage(imageUrl),
+                            image: imageProvider,
                           ),
                         ),
                       ),
@@ -75,7 +79,7 @@ class FullscreenArticleScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          title,
+                          galleryElement.title,
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 20,
@@ -84,7 +88,7 @@ class FullscreenArticleScreen extends StatelessWidget {
                         ),
                         SizedBox(height: 10),
                         Text(
-                          description,
+                          galleryElement.description,
                           style: TextStyle(fontSize: 16),
                           textAlign: TextAlign.left,
                         ),
@@ -103,10 +107,10 @@ class FullscreenArticleScreen extends StatelessWidget {
 }
 
 class FullScreenImage extends StatelessWidget {
-  final String imageUrl;
+  final ImageProvider imageProvider;
 
   const FullScreenImage(
-      {Key? key,  required this.imageUrl})
+      {Key? key,  required this.imageProvider})
       : super(key: key);
 
   @override
@@ -133,7 +137,7 @@ class FullScreenImage extends StatelessWidget {
             itemCount: 1,
             builder: (context, index) {
               return PhotoViewGalleryPageOptions(
-                imageProvider: NetworkImage(imageUrl),
+                imageProvider: imageProvider,
                 minScale: PhotoViewComputedScale.contained,
                 maxScale: PhotoViewComputedScale.covered * 2,
               );
@@ -149,31 +153,47 @@ class FullScreenImage extends StatelessWidget {
     );
   }
 
-  Future<void> _saveImage(BuildContext context) async {
-    String? message;
-    final scaffoldMessenger = ScaffoldMessenger.of(context);
+Future<void> _saveImage(BuildContext context) async {
+  String? message;
+  final scaffoldMessenger = ScaffoldMessenger.of(context);
 
-    try {
-      final http.Response response = await http.get(Uri.parse(imageUrl));
-      final dir = await getTemporaryDirectory();
-      var timestamp = DateTime.now().millisecondsSinceEpoch;
-      var filename = '${dir.path}/space_view_$timestamp.png';
-
-      final file = File(filename);
-      await file.writeAsBytes(response.bodyBytes);
-
-      final params = SaveFileDialogParams(sourceFilePath: file.path);
-      final finalPath = await FlutterFileDialog.saveFile(params: params);
-
-      if (finalPath != null) {
-        message = 'Image saved to disk.';
-      }
-    } catch (e) {
-      message = 'An error occurred while saving the image.';
+  try {
+    // Create a stream of image data from the ImageProvider
+    final ImageStream stream = imageProvider.resolve(ImageConfiguration());
+    final Completer<ImageInfo> completer = Completer();
+    void imageListener(ImageInfo info, bool _) {
+      completer.complete(info);
+      stream.removeListener(ImageStreamListener(imageListener));
     }
+    stream.addListener(ImageStreamListener(imageListener));
 
-    if (message != null) {
-      scaffoldMessenger.showSnackBar(SnackBar(content: Text(message)));
+    // Get the image info (which includes the image itself)
+    final ImageInfo imageInfo = await completer.future;
+    final ui.Image image = imageInfo.image;
+
+    // Convert the ui.Image to a ByteData
+    final ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+    final Uint8List pngBytes = byteData!.buffer.asUint8List();
+
+    // Save the image to a file
+    final dir = await getTemporaryDirectory();
+    var timestamp = DateTime.now().millisecondsSinceEpoch;
+    var filename = '${dir.path}/space_view_$timestamp.png';
+    final file = File(filename);
+    await file.writeAsBytes(pngBytes);
+
+    final params = SaveFileDialogParams(sourceFilePath: file.path);
+    final finalPath = await FlutterFileDialog.saveFile(params: params);
+
+    if (finalPath != null) {
+      message = 'Image saved to disk.';
     }
+  } catch (e) {
+    message = 'An error occurred while saving the image.';
   }
+
+  if (message != null) {
+    scaffoldMessenger.showSnackBar(SnackBar(content: Text(message)));
+  }
+}
 }

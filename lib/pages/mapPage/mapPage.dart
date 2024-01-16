@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:space_view/functions/panorama.dart';
 import 'package:space_view/pages/fullscreenArticlePage.dart';
+import 'package:space_view/widgets/carouselElement.dart';
 import 'constellation_data.dart';
 
 class MapScreen extends StatefulWidget {
@@ -41,12 +42,12 @@ class _MapScreenState extends State<MapScreen> {
   double _gyroX = 0.0;
   double _gyroY = 0.0;
   bool isLoading = true;
-  
+  ImageProvider? imageProvider;
 
   @override
   void initState() {
     super.initState();
-    
+    imageProvider = AssetImage('assets/images/transparent.png');
     Future.delayed(Duration(seconds: 1), () {
       setState(() {
         isLoading = false;
@@ -74,9 +75,12 @@ class _MapScreenState extends State<MapScreen> {
                 context,
                 MaterialPageRoute(
                   builder: (context) => FullscreenArticleScreen(
+                    galleryElement: CarouselGalleryElement(
                     imageUrl: constellation.imageUrl,
                     title: '${constellation.name} constellation',
                     description: constellation.description,
+                    ),
+                    imageProvider: NetworkImage(constellation.imageUrl),
                   ),
                 ),
               );

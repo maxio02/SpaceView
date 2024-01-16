@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:space_view/pages/videoPage.dart';
+import 'package:space_view/widgets/noInternetError.dart';
 import 'dart:convert';
 import '../pages/fullscreenArticlePage.dart';
-import 'galleryElement.dart';
+import 'verticalGalleryElement.dart';
 
 import 'package:space_view/managers/audioManager.dart';
 import 'package:provider/provider.dart';
@@ -16,7 +17,7 @@ class VerticalGallery extends StatefulWidget {
 }
 
 class _VerticalGalleryState extends State<VerticalGallery> {
-  late Future<List<GalleryElement>> futureGalleryElements;
+  late Future<List<VerticalGalleryElement>> futureGalleryElements;
   static const int batchSize = 15;
   static const String videoUrl =
       'https://images-assets.nasa.gov/video/20190530-SPITZRf-0001-Stars%20of%20Cephus/20190530-SPITZRf-0001-Stars%20of%20Cephus~orig.mp4';
@@ -36,7 +37,7 @@ class _VerticalGalleryState extends State<VerticalGallery> {
 
     return Container(
       height: screenSize.height,
-      child: FutureBuilder<List<GalleryElement>>(
+      child: FutureBuilder<List<VerticalGalleryElement>>(
         future: genVerticalGallery(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -44,13 +45,10 @@ class _VerticalGalleryState extends State<VerticalGallery> {
               child: CircularProgressIndicator(),
             );
           } else if (snapshot.hasError) {
-            return Center(
-              child: Text('Error: ${snapshot.error}'),
-            );
+            // Display error message and icon
+            return NoInternetError();
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(
-              child: Text('No data available.'),
-            );
+            return NoInternetError();
           } else {
             return Column(
               children: [
@@ -89,26 +87,12 @@ class _VerticalGalleryState extends State<VerticalGallery> {
                     itemCount: snapshot.data!.length,
                     scrollDirection: Axis.vertical,
                     itemBuilder: (context, index) {
-                      return GestureDetector(
-                        onTap: () {
-                          audioManager.playClickSound();
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => FullscreenArticleScreen(
-                                imageUrl: snapshot.data![index].imageUrl,
-                                title: snapshot.data![index].title,
-                                description: snapshot.data![index].description,
-                              ),
-                            ),
-                          );
-                        },
-                        child: GalleryElement(
-                          imageUrl: snapshot.data![index].imageUrl,
-                          title: snapshot.data![index].title,
-                          description: snapshot.data![index].description,
-                        ),
+                      final galleryElement = VerticalGalleryElement(
+                        imageUrl: snapshot.data![index].imageUrl,
+                        title: snapshot.data![index].title,
+                        description: snapshot.data![index].description,
                       );
+                      return galleryElement;
                     },
                   ),
                 ),
@@ -120,7 +104,7 @@ class _VerticalGalleryState extends State<VerticalGallery> {
     );
   }
 
-  Future<List<GalleryElement>> genVerticalGallery() async {
+  Future<List<VerticalGalleryElement>> genVerticalGallery() async {
     const String apiKey = 'aKCPsASpnNuaWFu3nimYwrEbFaopliV273anXN6K';
     const String apiUrl =
         'https://api.nasa.gov/planetary/apod?api_key=$apiKey&count=$batchSize';
@@ -130,14 +114,14 @@ class _VerticalGalleryState extends State<VerticalGallery> {
       if (response.statusCode == 200) {
         List<dynamic> data = json.decode(response.body);
 
-        List<GalleryElement> newGalleryItems = [];
+        List<VerticalGalleryElement> newGalleryItems = [];
 
         for (var item in data) {
           String imageUrl = item['hdurl'] ?? '';
           String title = item['title'] ?? 'No Title';
           String description = item['explanation'] ?? 'No Description';
-          
-          newGalleryItems.add(GalleryElement(
+
+          newGalleryItems.add(VerticalGalleryElement(
             imageUrl: imageUrl,
             title: title,
             description: description,
@@ -150,7 +134,7 @@ class _VerticalGalleryState extends State<VerticalGallery> {
       }
     } catch (e) {
       print('Error fetching data: $e');
-      rethrow; // Re-throw the error to be caught by the FutureBuilder
+      return [];
     }
   }
 }

@@ -10,6 +10,7 @@ import 'package:path_provider/path_provider.dart';
 
 import 'package:space_view/managers/audioManager.dart';
 import 'package:provider/provider.dart';
+import 'package:space_view/widgets/noInternetError.dart';
 
 class PicOfTheDayScreen extends StatefulWidget {
   const PicOfTheDayScreen({Key? key}) : super(key: key);
@@ -55,9 +56,14 @@ class _PicOfTheDayScreenState extends State<PicOfTheDayScreen> {
                     ),
                   );
                 } else if (snapshot.hasError) {
-                  return Center(
-                    child: Text('Error: ${snapshot.error}'),
-                  );
+                  // Display error message and icon
+                  
+                  return Center(child: Column(
+                    children: [
+                      SizedBox(height: screenSize.height / 5),
+                      NoInternetError(),
+                    ],
+                  ));
                 } else if (!snapshot.hasData) {
                   return Center(
                     child: Text('No data available.'),
