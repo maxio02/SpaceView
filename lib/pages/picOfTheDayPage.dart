@@ -46,7 +46,12 @@ class _PicOfTheDayScreenState extends State<PicOfTheDayScreen> {
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return Center(
-                    child: CircularProgressIndicator(),
+                    child: Column(
+                      children: [
+                        SizedBox(height: screenSize.height/5),
+                        CircularProgressIndicator(),
+                      ],
+                    ),
                   );
                 } else if (snapshot.hasError) {
                   return Center(
