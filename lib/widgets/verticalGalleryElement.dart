@@ -65,8 +65,8 @@ class _VerticalGalleryElementState extends GalleryElementBaseState {
                     fit: BoxFit.cover,
                     height: 330,
                     width: double.infinity,
-                    progressIndicatorBuilder: (context, url, downloadProgress) =>
-                        Center(
+                    progressIndicatorBuilder:
+                        (context, url, downloadProgress) => Center(
                       child: SizedBox(
                         width: 330 * 0.15,
                         height: 330 * 0.15,
@@ -74,7 +74,26 @@ class _VerticalGalleryElementState extends GalleryElementBaseState {
                             value: downloadProgress.progress),
                       ),
                     ),
-                    errorWidget: (context, url, error) => Icon(Icons.error),
+                    errorWidget: (context, url, error) => const Center(
+                      child: Column(mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        
+                        Icon(Icons.error_outline, size:20),
+                        SizedBox(height: 10),
+                        Text(
+                          "Couldn't fetch the image from the internet",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: 5),
+                        Text("Please try again later",
+                            style: TextStyle(
+                              fontSize: 16,
+                            ))
+                      ]),
+                    ),
                   ),
                 ),
               ),

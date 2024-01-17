@@ -58,20 +58,18 @@ class _CarouselGalleryElementState extends GalleryElementBaseState {
                             }
                           });
                           return Container(
-                            decoration: BoxDecoration(
-                              image: DecorationImage(
-                                image: imageProvider,
-                                fit: BoxFit.cover,
-                              
+                              decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: imageProvider,
+                              fit: BoxFit.cover,
                             ),
-                            )
-                          );
+                          ));
                         },
                         fit: BoxFit.cover,
                         height: 211,
                         width: double.infinity,
-                        progressIndicatorBuilder: (context, url, downloadProgress) =>
-                            Center(
+                        progressIndicatorBuilder:
+                            (context, url, downloadProgress) => Center(
                           child: SizedBox(
                             width: 211 * 0.15,
                             height: 211 * 0.15,
@@ -79,7 +77,26 @@ class _CarouselGalleryElementState extends GalleryElementBaseState {
                                 value: downloadProgress.progress),
                           ),
                         ),
-                        errorWidget: (context, url, error) => Icon(Icons.error),
+                        errorWidget: (context, url, error) => const Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.error_outline, size: 20),
+                            SizedBox(height: 10),
+                            Text(
+                              "Couldn't fetch the image from the internet",
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            SizedBox(height: 5),
+                            Text("Please try again later",
+                                style: TextStyle(
+                                  fontSize: 12,
+                                ))
+                          ]),
+                        ),
                       ),
                     ),
                   ),
