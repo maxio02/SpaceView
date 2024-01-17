@@ -104,9 +104,9 @@ class CirclePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()..color = circleColor;
-    // for (var circle in circles) {
-    //   canvas.drawCircle(circle.position, circle.radius, paint);
-    // }
+    for (var circle in circles) {
+      canvas.drawCircle(circle.position, circle.radius, paint);
+    }
   }
 
   @override
