@@ -1,9 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:space_view/widgets/galleryElementBase.dart';
 
-class CarouselGalleryElement extends GalleryElementBase {
-  CarouselGalleryElement({
+class VerticalGalleryElement extends GalleryElementBase {
+  VerticalGalleryElement({
     super.key,
     required super.imageUrl,
     required super.title,
@@ -11,10 +12,10 @@ class CarouselGalleryElement extends GalleryElementBase {
   });
 
   @override
-  _CarouselGalleryElementState createState() => _CarouselGalleryElementState();
+  _VerticalGalleryElementState createState() => _VerticalGalleryElementState();
 }
 
-class _CarouselGalleryElementState extends GalleryElementBaseState {
+class _VerticalGalleryElementState extends GalleryElementBaseState {
   late ImageProvider imageProvider;
 
   @override
@@ -26,19 +27,18 @@ class _CarouselGalleryElementState extends GalleryElementBaseState {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => navigateToFullScreenArticle(widget, this),
-      child: Container(
-          width: 177,
-          height: 276,
-          margin: EdgeInsets.symmetric(horizontal: 21),
-          padding: EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: Theme.of(context).primaryColor,
-            borderRadius: BorderRadius.circular(26),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
+        onTap: () => navigateToFullScreenArticle(widget, this),
+        child: Container(
+            width: 363,
+            height: 510,
+            margin: EdgeInsets.symmetric(horizontal: 21, vertical: 16),
+            padding: EdgeInsets.all(17),
+            decoration: BoxDecoration(
+              color: Theme.of(context).primaryColor,
+              borderRadius: BorderRadius.circular(26),
+            ),
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(19),
                 child: CachedNetworkImage(
@@ -56,19 +56,18 @@ class _CarouselGalleryElementState extends GalleryElementBaseState {
                         image: DecorationImage(
                           image: imageProvider,
                           fit: BoxFit.cover,
-                        
+                        ),
                       ),
-                      )
                     );
                   },
                   fit: BoxFit.cover,
-                  height: 211,
+                  height: 330,
                   width: double.infinity,
                   progressIndicatorBuilder: (context, url, downloadProgress) =>
                       Center(
                     child: SizedBox(
-                      width: 211 * 0.15,
-                      height: 211 * 0.15,
+                      width: 330 * 0.15,
+                      height: 330 * 0.15,
                       child: CircularProgressIndicator(
                           value: downloadProgress.progress),
                     ),
@@ -76,9 +75,10 @@ class _CarouselGalleryElementState extends GalleryElementBaseState {
                   errorWidget: (context, url, error) => Icon(Icons.error),
                 ),
               ),
+              SizedBox(height: 10),
               Text(
                 widget.title,
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                 textAlign: TextAlign.left,
               ),
               Expanded(
@@ -86,7 +86,7 @@ class _CarouselGalleryElementState extends GalleryElementBaseState {
                 children: [
                   Text(
                     widget.description,
-                    style: TextStyle(fontSize: 12),
+                    style: TextStyle(fontSize: 16),
                     textAlign: TextAlign.left,
                   ),
                   Positioned(
@@ -109,8 +109,6 @@ class _CarouselGalleryElementState extends GalleryElementBaseState {
                   ),
                 ],
               ))
-            ],
-          )),
-    );
+            ])));
   }
 }

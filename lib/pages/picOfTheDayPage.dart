@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:photo_view/photo_view_gallery.dart';
@@ -9,6 +10,7 @@ import 'package:path_provider/path_provider.dart';
 
 import 'package:space_view/managers/audioManager.dart';
 import 'package:provider/provider.dart';
+import 'package:space_view/widgets/noInternetError.dart';
 
 class PicOfTheDayScreen extends StatefulWidget {
   const PicOfTheDayScreen({Key? key}) : super(key: key);
@@ -46,12 +48,22 @@ class _PicOfTheDayScreenState extends State<PicOfTheDayScreen> {
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return Center(
-                    child: CircularProgressIndicator(),
+                    child: Column(
+                      children: [
+                        SizedBox(height: screenSize.height / 5),
+                        CircularProgressIndicator(),
+                      ],
+                    ),
                   );
                 } else if (snapshot.hasError) {
-                  return Center(
-                    child: Text('Error: ${snapshot.error}'),
-                  );
+                  // Display error message and icon
+                  
+                  return Center(child: Column(
+                    children: [
+                      SizedBox(height: screenSize.height / 5),
+                      NoInternetError(),
+                    ],
+                  ));
                 } else if (!snapshot.hasData) {
                   return Center(
                     child: Text('No data available.'),
@@ -79,11 +91,20 @@ class _PicOfTheDayScreenState extends State<PicOfTheDayScreen> {
                             child: Container(
                               width: screenSize.width,
                               height: screenSize.width,
-                              decoration: BoxDecoration(
-                                image: DecorationImage(
-                                  fit: BoxFit.cover,
-                                  image: NetworkImage(snapshot.data!.imageUrl),
+                              child: CachedNetworkImage(
+                                fit: BoxFit.cover,
+                                imageUrl: snapshot.data!.imageUrl,
+                                progressIndicatorBuilder:
+                                    (context, url, downloadProgress) => Center(
+                                  child: SizedBox(
+                                    width: screenSize.width * 0.15,
+                                    height: screenSize.width * 0.15,
+                                    child: CircularProgressIndicator(
+                                        value: downloadProgress.progress),
+                                  ),
                                 ),
+                                errorWidget: (context, url, error) =>
+                                    Icon(Icons.error),
                               ),
                             ),
                           ),

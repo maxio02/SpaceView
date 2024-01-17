@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 
 import 'galleryPage.dart';
 import 'homePage.dart';
-import 'mapPage.dart';
+import 'mapPage/mapPage.dart';
 import 'picOfTheDayPage.dart';
 
 class Mainscreen extends StatefulWidget {

@@ -12,7 +12,7 @@ class AudioManager {
   final AudioPlayer _player = AudioPlayer();
 
   void playClickSound() async {
-    await _player.play(AssetSource('sounds/click.mp3'));
+    await _player.play(AssetSource('sounds/click.wav'));
   }
 
   bool _isSoundEnabled = true;
