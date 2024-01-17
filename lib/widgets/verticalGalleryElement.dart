@@ -39,40 +39,43 @@ class _VerticalGalleryElementState extends GalleryElementBaseState {
             ),
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(19),
-                child: CachedNetworkImage(
-                  imageUrl: widget.imageUrl,
-                  imageBuilder: (context, newImageProvider) {
-                    WidgetsBinding.instance.addPostFrameCallback((_) {
-                      if (imageProvider != newImageProvider) {
-                        setState(() {
-                          imageProvider = newImageProvider;
-                        });
-                      }
-                    });
-                    return Container(
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: imageProvider,
-                          fit: BoxFit.cover,
+              Hero(
+                tag: widget.title,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(19),
+                  child: CachedNetworkImage(
+                    imageUrl: widget.imageUrl,
+                    imageBuilder: (context, newImageProvider) {
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        if (imageProvider != newImageProvider) {
+                          setState(() {
+                            imageProvider = newImageProvider;
+                          });
+                        }
+                      });
+                      return Container(
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: imageProvider,
+                            fit: BoxFit.cover,
+                          ),
                         ),
+                      );
+                    },
+                    fit: BoxFit.cover,
+                    height: 330,
+                    width: double.infinity,
+                    progressIndicatorBuilder: (context, url, downloadProgress) =>
+                        Center(
+                      child: SizedBox(
+                        width: 330 * 0.15,
+                        height: 330 * 0.15,
+                        child: CircularProgressIndicator(
+                            value: downloadProgress.progress),
                       ),
-                    );
-                  },
-                  fit: BoxFit.cover,
-                  height: 330,
-                  width: double.infinity,
-                  progressIndicatorBuilder: (context, url, downloadProgress) =>
-                      Center(
-                    child: SizedBox(
-                      width: 330 * 0.15,
-                      height: 330 * 0.15,
-                      child: CircularProgressIndicator(
-                          value: downloadProgress.progress),
                     ),
+                    errorWidget: (context, url, error) => Icon(Icons.error),
                   ),
-                  errorWidget: (context, url, error) => Icon(Icons.error),
                 ),
               ),
               SizedBox(height: 10),

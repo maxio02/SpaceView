@@ -47,7 +47,7 @@ class FullscreenArticleScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Hero(
-                    tag: 'articleImage', // Unique tag for the hero animation
+                    tag: galleryElement.title, // Unique tag for the hero animation
                     child: GestureDetector(
                       onTap: () {
                         audioManager.playClickSound();
@@ -56,6 +56,7 @@ class FullscreenArticleScreen extends StatelessWidget {
                           MaterialPageRoute(
                             builder: (context) => FullScreenImage(
                               imageProvider: imageProvider,
+                              title: galleryElement.title,
                             ),
                           ),
                         );
@@ -108,9 +109,10 @@ class FullscreenArticleScreen extends StatelessWidget {
 
 class FullScreenImage extends StatelessWidget {
   final ImageProvider imageProvider;
-
+  final String title;
   const FullScreenImage(
-      {Key? key,  required this.imageProvider})
+      {Key? key,  required this.imageProvider,
+                  required this.title})
       : super(key: key);
 
   @override
@@ -130,9 +132,9 @@ class FullScreenImage extends StatelessWidget {
           ),
         ],
       ),
-      body: Center(
-        child: Hero(
-          tag: 'articleImage', // Same tag as used in FullscreenArticleScreen
+              body: Hero(
+          tag: title,
+      child: Center(
           child: PhotoViewGallery.builder(
             itemCount: 1,
             builder: (context, index) {

@@ -7,25 +7,26 @@ class AudioManager {
     return _instance;
   }
 
-  AudioManager._internal();
+  AudioManager._internal(){
+      _player.setPlayerMode(PlayerMode.mediaPlayer);
+  }
 
   final AudioPlayer _player = AudioPlayer();
 
   void playClickSound() async {
+    if(isSoundEnabled){
     await _player.play(AssetSource('sounds/click.wav'));
+    }else{
+      return;
+    }
   }
 
   bool _isSoundEnabled = true;
 
   bool get isSoundEnabled => _isSoundEnabled;
 
-  void toggleSound(bool isEnabled) {
+  void setSound(bool isEnabled) {
     _isSoundEnabled = isEnabled;
-    if (_isSoundEnabled) {
-      _player.setVolume(1.0);
-    } else {
-      _player.setVolume(0.0);
-    }
   }
 
   void dispose() {

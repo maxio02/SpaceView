@@ -24,7 +24,7 @@ class _SoundSwitchState extends State<SoundSwitch> {
     return Switch.adaptive(
       value: isSoundEnabled,
       onChanged: (value) {
-        Provider.of<AudioManager>(context, listen: false).toggleSound(value);
+        Provider.of<AudioManager>(context, listen: false).setSound(value);
         setState(() {
           isSoundEnabled = value;
         });
