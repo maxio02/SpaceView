@@ -11,16 +11,25 @@ class MapScreen extends StatefulWidget {
   _MapScreenState createState() => _MapScreenState();
 }
 
-Widget hotspotButton({String? text, IconData? icon, VoidCallback? onPressed}) {
+Widget hotspotButton({
+  String? text,
+  IconData? icon,
+  VoidCallback? onPressed,
+  ThemeData? theme,
+}) {
+  Color oppositeColor = theme?.brightness == Brightness.light
+      ? Color.fromRGBO(230, 230, 230, 0.404)
+      : Color.fromRGBO(94, 98, 107, 0.569);
+
   return Column(
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
       TextButton(
         style: ButtonStyle(
           shape: MaterialStateProperty.all(CircleBorder()),
-          backgroundColor: MaterialStateProperty.all(
-              const Color.fromARGB(96, 255, 255, 255)),
-          foregroundColor: MaterialStateProperty.all(Colors.white),
+          backgroundColor: MaterialStateProperty.all(oppositeColor),
+          foregroundColor:
+              MaterialStateProperty.all(theme?.textTheme.labelLarge?.color),
         ),
         child: Icon(icon),
         onPressed: onPressed,
@@ -29,8 +38,9 @@ Widget hotspotButton({String? text, IconData? icon, VoidCallback? onPressed}) {
           ? Container(
               padding: EdgeInsets.all(4.0),
               decoration: BoxDecoration(
-                  color: Colors.black38,
-                  borderRadius: BorderRadius.all(Radius.circular(4))),
+                color: oppositeColor,
+                borderRadius: BorderRadius.all(Radius.circular(4)),
+              ),
               child: Center(child: Text(text)),
             )
           : Container(),
@@ -57,6 +67,8 @@ class _MapScreenState extends State<MapScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ThemeData theme = Theme.of(context);
+
     if (isLoading) {
       // Show loading indicator
       return Center(child: CircularProgressIndicator());
@@ -76,15 +88,16 @@ class _MapScreenState extends State<MapScreen> {
                 MaterialPageRoute(
                   builder: (context) => FullscreenArticleScreen(
                     galleryElement: CarouselGalleryElement(
-                    imageUrl: constellation.imageUrl,
-                    title: '${constellation.name} constellation',
-                    description: constellation.description,
+                      imageUrl: constellation.imageUrl,
+                      title: '${constellation.name} constellation',
+                      description: constellation.description,
                     ),
                     imageProvider: NetworkImage(constellation.imageUrl),
                   ),
                 ),
               );
             },
+            theme: theme,
           ),
         );
       }).toList();
