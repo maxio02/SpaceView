@@ -53,6 +53,7 @@ dependencies:
         url: https://github.com/zesage/motion_sensors
         ref: master
   cached_network_image: ^3.3.1
+  shimmer: ^3.0.0
 
 
 dev_dependencies:
