@@ -39,7 +39,7 @@ class _FloatingCirclesBgState extends State<FloatingCirclesBg> with SingleTicker
   }
 
 void initializeCircles() {
-  WidgetsBinding.instance?.addPostFrameCallback((_) {
+  WidgetsBinding.instance.addPostFrameCallback((_) {
     if (mounted) {
       _size = context.size ?? Size.zero;
       double radius;

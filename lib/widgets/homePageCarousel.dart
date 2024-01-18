@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shimmer/shimmer.dart';
 import 'package:space_view/widgets/noInternetError.dart';
 import 'package:space_view/widgets/verticalGalleryElement.dart';
 import 'dart:convert';
@@ -10,13 +11,13 @@ import 'package:space_view/managers/audioManager.dart';
 import 'package:provider/provider.dart';
 
 class HomePageCarousel extends StatefulWidget {
-  HomePageCarousel({Key? key}) : super(key: key);
+  const HomePageCarousel({super.key});
 
   @override
-  State<HomePageCarousel> createState() => _HomePageCarouselState();
+  State<HomePageCarousel> createState() => HomePageCarouselState();
 }
 
-class _HomePageCarouselState extends State<HomePageCarousel> {
+class HomePageCarouselState extends State<HomePageCarousel> {
   late Future<List<CarouselGalleryElement>> futureCarouselItems;
   static const int batchSize = 5;
 
@@ -35,9 +36,7 @@ class _HomePageCarouselState extends State<HomePageCarousel> {
         future: futureCarouselItems,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
+              return _buildShimmerEffect();
           } else if (snapshot.hasError) {
           // Display error message and icon
           return NoInternetError();
@@ -97,4 +96,27 @@ class _HomePageCarouselState extends State<HomePageCarousel> {
       rethrow;
     }
   }
+
+  Widget _buildShimmerEffect() {
+  return ListView.builder(
+    itemCount: 5,
+    scrollDirection: Axis.horizontal,
+    itemBuilder: (context, index) {
+      return Container(
+        margin: EdgeInsets.symmetric(horizontal: 22),
+        width: 174,
+        child: Shimmer.fromColors(
+          baseColor: Theme.of(context).primaryColor,
+          highlightColor: Theme.of(context).navigationBarTheme.backgroundColor!.withOpacity(1),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Theme.of(context).primaryColor,
+              borderRadius: BorderRadius.circular(26),
+            ),
+          ),
+        ),
+      );
+    },
+  );
+}
 }

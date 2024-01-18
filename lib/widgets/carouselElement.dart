@@ -33,7 +33,7 @@ class _CarouselGalleryElementState extends GalleryElementBaseState {
           borderRadius: BorderRadius.circular(26),
           clipBehavior: Clip.antiAliasWithSaveLayer,
           child: Container(
-              width: 177,
+              width: 174,
               height: 276,
               padding: EdgeInsets.fromLTRB(8, 8, 8, 0),
               decoration: BoxDecoration(

@@ -1,6 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:space_view/widgets/galleryElementBase.dart';
 
 class VerticalGalleryElement extends GalleryElementBase {
@@ -29,7 +28,7 @@ class _VerticalGalleryElementState extends GalleryElementBaseState {
     return GestureDetector(
         onTap: () => navigateToFullScreenArticle(widget, this),
         child: Container(
-            width: 363,
+            width: 362,
             height: 510,
             margin: EdgeInsets.symmetric(horizontal: 21, vertical: 16),
             padding: EdgeInsets.all(17),

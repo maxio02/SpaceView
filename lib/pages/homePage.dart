@@ -12,8 +12,10 @@ class HomeScreen extends StatefulWidget {
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
-
+final GlobalKey<HomePageCarouselState> carouselKey = GlobalKey();
 class _HomeScreenState extends State<HomeScreen> {
+  
+
   void _showSettingsPane(BuildContext context) {
     showAlignedDialog(
       context: context,
@@ -61,7 +63,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ? CrossFadeState.showSecond 
                     : CrossFadeState.showFirst,
               ),
-              HomePageCarousel(),
+              HomePageCarousel(key: carouselKey),
             ],
           ),
         ),
