@@ -7,16 +7,20 @@ class AudioManager {
     return _instance;
   }
 
-  AudioManager._internal(){
-      _player.setPlayerMode(PlayerMode.mediaPlayer);
+  AudioManager._internal() {
+    _player.setPlayerMode(PlayerMode.mediaPlayer);
   }
 
-  final AudioPlayer _player = AudioPlayer();
+  AudioPlayer _player = AudioPlayer();
 
-  void playClickSound() async {
-    if(isSoundEnabled){
-    await _player.play(AssetSource('sounds/click.wav'));
-    }else{
+  AudioPlayer get player => _player;
+
+  set player(AudioPlayer value) => _player = value;
+
+  Future<void> playClickSound() async {
+    if (isSoundEnabled) {
+      await _player.play(AssetSource('sounds/click.wav'));
+    } else {
       return;
     }
   }
