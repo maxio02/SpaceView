@@ -102,7 +102,7 @@ class _VerticalGalleryElementState extends GalleryElementBaseState {
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                 textAlign: TextAlign.left,
               ),
-              Expanded(
+              Flexible(
                   child: Stack(
                 children: [
                   Text(

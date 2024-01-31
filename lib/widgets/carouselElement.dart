@@ -105,7 +105,7 @@ class _CarouselGalleryElementState extends GalleryElementBaseState {
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                     textAlign: TextAlign.left,
                   ),
-                  Expanded(
+                  Flexible(
                       child: Stack(
                     children: [
                       Text(

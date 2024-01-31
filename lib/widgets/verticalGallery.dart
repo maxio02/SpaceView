@@ -80,7 +80,7 @@ class VerticalGalleryState extends State<VerticalGallery> {
                 ),
 
                 // Gallery
-                Expanded(
+                Flexible(
                   child: ListView.builder(
                     itemCount: snapshot.data!.length,
                     scrollDirection: Axis.vertical,
@@ -136,33 +136,38 @@ class VerticalGalleryState extends State<VerticalGallery> {
     }
   }
 
-   Widget _buildShimmerEffect() {
-  return Expanded(
-    child: Container(
-      margin: EdgeInsets.only(top:73),
-      child: ListView.builder(
-        itemCount: 5,
-        scrollDirection: Axis.vertical,
-        itemBuilder: (context, index) {
-          return Container(
-            margin: EdgeInsets.symmetric(horizontal: 21, vertical: 16),
-      
-            width: 362,
-            height: 510,
-            child: Shimmer.fromColors(
-              baseColor: Theme.of(context).primaryColor,
-              highlightColor: Theme.of(context).navigationBarTheme.backgroundColor!.withOpacity(1),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Theme.of(context).primaryColor,
-                  borderRadius: BorderRadius.circular(26),
+Widget _buildShimmerEffect() {
+  return Column(
+    children: [
+      Flexible(
+        child: Container(
+          margin: EdgeInsets.only(top: 73),
+          child: ListView.builder(
+            itemCount: 5,
+            scrollDirection: Axis.vertical,
+            itemBuilder: (context, index) {
+              return Container(
+                margin: EdgeInsets.symmetric(horizontal: 21, vertical: 16),
+                width: 362,
+                height: 510,
+                child: Shimmer.fromColors(
+                  baseColor: Theme.of(context).primaryColor,
+                  highlightColor:
+                      Theme.of(context).navigationBarTheme.backgroundColor!
+                          .withOpacity(1),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).primaryColor,
+                      borderRadius: BorderRadius.circular(26),
+                    ),
+                  ),
                 ),
-              ),
-            ),
-          );
-        },
+              );
+            },
+          ),
+        ),
       ),
-    ),
+    ],
   );
 }
 }

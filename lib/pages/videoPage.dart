@@ -55,21 +55,23 @@ class _VideoScreenState extends State<VideoScreen> {
       ),
       body: Container(
         color: Colors.black,
-        child: Column(
+        child: Flex(
+          direction: Axis.vertical,
           crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Expanded(
-              child: BetterPlayer.network(
-                widget.videoLink,
-                betterPlayerConfiguration: BetterPlayerConfiguration(
-                  aspectRatio: 16 / 9,
-                  autoPlay: true,
+            children: [
+              Flexible(
+                child: BetterPlayer.network(
+                  widget.videoLink,
+                  betterPlayerConfiguration: BetterPlayerConfiguration(
+                    aspectRatio: 16 / 9,
+                    autoPlay: true,
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
     );
+
   }
 }
