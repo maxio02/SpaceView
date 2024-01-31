@@ -9,6 +9,7 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:flutter_file_dialog/flutter_file_dialog.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:space_view/functions/saveImage.dart';
 
 import 'package:space_view/managers/audioManager.dart';
 import 'package:provider/provider.dart';
@@ -19,11 +20,9 @@ class FullscreenArticleScreen extends StatelessWidget {
   final GalleryElementBase galleryElement;
   final ImageProvider imageProvider;
 
-  const FullscreenArticleScreen({
-    Key? key,
-    required this.galleryElement,
-    required this.imageProvider
-  }) : super(key: key);
+  const FullscreenArticleScreen(
+      {Key? key, required this.galleryElement, required this.imageProvider})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +46,8 @@ class FullscreenArticleScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Hero(
-                    tag: galleryElement.title, // Unique tag for the hero animation
+                    tag: galleryElement
+                        .title, // Unique tag for the hero animation
                     child: GestureDetector(
                       onTap: () {
                         audioManager.playClickSound();
@@ -111,8 +111,7 @@ class FullScreenImage extends StatelessWidget {
   final ImageProvider imageProvider;
   final String title;
   const FullScreenImage(
-      {Key? key,  required this.imageProvider,
-                  required this.title})
+      {Key? key, required this.imageProvider, required this.title})
       : super(key: key);
 
   @override
@@ -132,9 +131,9 @@ class FullScreenImage extends StatelessWidget {
           ),
         ],
       ),
-              body: Hero(
-          tag: title,
-      child: Center(
+      body: Hero(
+        tag: title,
+        child: Center(
           child: PhotoViewGallery.builder(
             itemCount: 1,
             builder: (context, index) {
@@ -155,47 +154,14 @@ class FullScreenImage extends StatelessWidget {
     );
   }
 
-Future<void> _saveImage(BuildContext context) async {
-  String? message;
-  final scaffoldMessenger = ScaffoldMessenger.of(context);
+  Future<void> _saveImage(BuildContext context) async {
+    String? message;
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
 
-  try {
-    // Create a stream of image data from the ImageProvider
-    final ImageStream stream = imageProvider.resolve(ImageConfiguration());
-    final Completer<ImageInfo> completer = Completer();
-    void imageListener(ImageInfo info, bool _) {
-      completer.complete(info);
-      stream.removeListener(ImageStreamListener(imageListener));
+    message = await SaveImage.saveImage(imageProvider);
+
+    if (message != null) {
+      scaffoldMessenger.showSnackBar(SnackBar(content: Text(message)));
     }
-    stream.addListener(ImageStreamListener(imageListener));
-
-    // Get the image info (which includes the image itself)
-    final ImageInfo imageInfo = await completer.future;
-    final ui.Image image = imageInfo.image;
-
-    // Convert the ui.Image to a ByteData
-    final ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
-    final Uint8List pngBytes = byteData!.buffer.asUint8List();
-
-    // Save the image to a file
-    final dir = await getTemporaryDirectory();
-    var timestamp = DateTime.now().millisecondsSinceEpoch;
-    var filename = '${dir.path}/space_view_$timestamp.png';
-    final file = File(filename);
-    await file.writeAsBytes(pngBytes);
-
-    final params = SaveFileDialogParams(sourceFilePath: file.path);
-    final finalPath = await FlutterFileDialog.saveFile(params: params);
-
-    if (finalPath != null) {
-      message = 'Image saved to disk.';
-    }
-  } catch (e) {
-    message = 'An error occurred while saving the image.';
   }
-
-  if (message != null) {
-    scaffoldMessenger.showSnackBar(SnackBar(content: Text(message)));
-  }
-}
 }
