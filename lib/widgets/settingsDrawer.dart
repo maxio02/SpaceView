@@ -75,8 +75,7 @@ class SettingsDrawer extends StatelessWidget {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('About'),
-          content:
-              Text('This app uses media data from NASA...'), // TODO formulate
+          content: Text('This app uses media data from NASA.'),
           actions: <Widget>[
             TextButton(
               onPressed: () {
