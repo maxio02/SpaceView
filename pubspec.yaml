@@ -54,6 +54,7 @@ dependencies:
         ref: master
   cached_network_image: ^3.3.1
   shimmer: ^3.0.0
+  
 
 
 dev_dependencies:
@@ -69,6 +70,9 @@ dev_dependencies:
   test: ^1.24.9
   mockito: ^5.4.4
   build_runner: ^2.4.8
+  network_image_mock: ^2.1.1
+  integration_test:
+    sdk: flutter
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
